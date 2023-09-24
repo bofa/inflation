@@ -79,13 +79,15 @@ export function App() {
 
   const datasets = indexQuery.data ? [smoothKernal(indexQuery.data)] : []
 
-  const inflation = datasets.map(set => ({
-    ...set,
-    data: set.data.map((d, i, a) => ({
-      ...d,
-      y: (d.y - a[i-12]?.y) / a[i-12]?.y
+  const inflation = [1, 12].map((distance) => datasets.map(set => ({
+      ...set,
+      label: set.label + ' ' + distance,
+      data: set.data.map((d, i, a) => ({
+        ...d,
+        y: (d.y - a[i-distance]?.y) / a[i-distance]?.y * 12 / distance
+      }))
     }))
-  }))
+  ).flat()
 
   return (
     <>
