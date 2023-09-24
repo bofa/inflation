@@ -15,7 +15,7 @@ const options = {
       time: {
         // Luxon format string
         // tooltipFormat: 'DD T',
-        unit: 'day' as const,
+        unit: 'month' as const,
         displayFormats: {
           day: 'yyyy MMM'
         },
