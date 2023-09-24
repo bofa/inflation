@@ -37,10 +37,10 @@ export function App() {
 
   return (
     <>
-      <HTMLSelect onChange={e => setIndex(e.currentTarget.value as Index)}>
+      <HTMLSelect value={index} onChange={e => setIndex(e.currentTarget.value as Index)}>
         {indicies.map(o => <option key={o} value={o}>{o}</option>)}
       </HTMLSelect>
-      <HTMLSelect onChange={e => setSmoothKey(e.currentTarget.value as SmoothKey)}>
+      <HTMLSelect value={smoothKey} onChange={e => setSmoothKey(e.currentTarget.value as SmoothKey)}>
         {smoothOptions.map(o => <option key={o.key} value={o.key}>{o.name}</option>)}
       </HTMLSelect>
       <div style={{ width: '800', height: '800' }}>
