@@ -4,6 +4,7 @@ import { HTMLSelect } from '@blueprintjs/core'
 import { mean } from 'mathjs'
 import { Index, getIndex } from './api'
 import { ChartIndex, Series } from './ChartIndex'
+import { gaussianSmoothing } from './utils/smoothing'
 import './App.css'
 
 const indicies: Index[] = ['kpi', 'kpif', 'kpifXEnergy']
@@ -37,6 +38,28 @@ const smoothOptions = [
       }))
     })
   },
+  {
+    name: 'Moving Average 7',
+    key: 'movingAverage7',
+    kernal: (series: Series) => ({
+      ...series,
+      data: series.data.map((d, i, a) => ({
+        ...d,
+        y: mean(a.slice(Math.max(0, i-3), i+4).map(d => d.y))
+      }))
+    })
+  },
+  {
+    name: 'Gaussian',
+    key: 'gaussian',
+    kernal: (series: Series) => ({
+      ...series,
+      data: series.data.map((d, indexData, array) => ({
+        ...d,
+        y: gaussianSmoothing(array, indexData)
+      }))
+    })
+  }
 ] as const satisfies readonly { name: string, key: string, kernal: (series: Series) => Series}[]
 
 export function App() {
@@ -56,6 +79,14 @@ export function App() {
 
   const datasets = indexQuery.data ? [smoothKernal(indexQuery.data)] : []
 
+  const inflation = datasets.map(set => ({
+    ...set,
+    data: set.data.map((d, i, a) => ({
+      ...d,
+      y: (d.y - a[i-12]?.y) / a[i-12]?.y
+    }))
+  }))
+
   return (
     <>
       <HTMLSelect onChange={e => setIndex(e.currentTarget.value as Index)}>
@@ -65,7 +96,7 @@ export function App() {
         {smoothOptions.map(o => <option key={o.key} value={o.key}>{o.name}</option>)}
       </HTMLSelect>
       <div style={{ width: '800', height: '800' }}>
-        <ChartIndex datasets={datasets} />
+        <ChartIndex datasets={inflation} />
       </div>
     </>
   )
