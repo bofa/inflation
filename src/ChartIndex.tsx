@@ -57,6 +57,8 @@ export function ChartIndex (props: {
       ...set,
       borderColor: colors[i],
       pointRadius: 0,
+      pointHoverRadius: 5,
+      pointHitRadius: 15,
     })),
   }
 

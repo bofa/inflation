@@ -1,70 +1,16 @@
 import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { HTMLSelect } from '@blueprintjs/core'
-import { mean } from 'mathjs'
 import { Index, getIndex } from './api'
-import { ChartIndex, Series } from './ChartIndex'
-import { gaussianSmoothing } from './utils/smoothing'
+import { ChartIndex } from './ChartIndex'
+import { SmoothKey, smoothOptions } from './utils/smoothing'
 import './App.css'
 
 const indicies: Index[] = ['kpi', 'kpif', 'kpifXEnergy']
 
-type SmoothKey = typeof smoothOptions[number]['key']
-const smoothOptions = [
-  {
-    name: 'None',
-    key: 'none',
-    kernal: (series: Series) => series
-  },
-  {
-    name: 'Moving Average 3',
-    key: 'movingAverage3',
-    kernal: (series: Series) => ({
-      ...series,
-      data: series.data.map((d, i, a) => ({
-        ...d,
-        y: mean(a.slice(Math.max(0, i-1), i+2).map(d => d.y))
-      }))
-    }),
-  },
-  {
-    name: 'Moving Average 5',
-    key: 'movingAverage5',
-    kernal: (series: Series) => ({
-      ...series,
-      data: series.data.map((d, i, a) => ({
-        ...d,
-        y: mean(a.slice(Math.max(0, i-2), i+3).map(d => d.y))
-      }))
-    })
-  },
-  {
-    name: 'Moving Average 7',
-    key: 'movingAverage7',
-    kernal: (series: Series) => ({
-      ...series,
-      data: series.data.map((d, i, a) => ({
-        ...d,
-        y: mean(a.slice(Math.max(0, i-3), i+4).map(d => d.y))
-      }))
-    })
-  },
-  {
-    name: 'Gaussian',
-    key: 'gaussian',
-    kernal: (series: Series) => ({
-      ...series,
-      data: series.data.map((d, indexData, array) => ({
-        ...d,
-        y: gaussianSmoothing(array, indexData)
-      }))
-    })
-  }
-] as const satisfies readonly { name: string, key: string, kernal: (series: Series) => Series}[]
-
 export function App() {
   const [index, setIndex] = useState<Index>('kpi')
-  const [smoothKey, setSmoothKey] = useState<SmoothKey>('none')
+  const [smoothKey, setSmoothKey] = useState<SmoothKey>('gaussian3')
 
   const indexQuery = useQuery({
     queryKey: ['index', index],
