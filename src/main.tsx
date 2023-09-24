@@ -14,7 +14,7 @@ import {
   TimeScale,
 } from 'chart.js'
 import 'chartjs-adapter-luxon'
-import App from './App.tsx'
+import { App } from './App.tsx'
 
 import "normalize.css"
 import "@blueprintjs/core/lib/css/blueprint.css"
