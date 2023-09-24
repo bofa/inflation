@@ -1,3 +1,4 @@
+import { ChartData } from 'chart.js';
 import { type DateTime } from 'luxon'
 import { Line } from 'react-chartjs-2';
 
@@ -51,10 +52,11 @@ export function ChartIndex (props: {
   datasets: Series[]
 }) {
 
-  const data = {
+  const data: ChartData<"line"> = {
     datasets: props.datasets.map((set, i) => ({
       ...set,
-      borderColor: colors[i]
+      borderColor: colors[i],
+      pointRadius: 0,
     })),
   }
 
