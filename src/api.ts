@@ -3,5 +3,6 @@ import { DateTime } from "luxon"
 
 type Index = 'kpi'|'kpif'|'kpifXEnergy'
 export function getIndex(index: Index) {
-  return axios.get<{ x: DateTime, y: number }[]>(index + '.json')
+  return axios.get<{ x: string, y: number }[]>(index + '.json')
+    .then(r => r.data.map(({ x, y }) => ({ x: DateTime.fromISO(x), y })))
 }

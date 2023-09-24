@@ -1,11 +1,34 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip as ChartTooltip,
+  Legend,
+  TimeScale,
+} from 'chart.js'
+import 'chartjs-adapter-luxon'
 import App from './App.tsx'
-import './index.css'
 
 import "normalize.css"
 import "@blueprintjs/core/lib/css/blueprint.css"
 import "@blueprintjs/icons/lib/css/blueprint-icons.css"
+import './index.css'
+
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  TimeScale,
+  PointElement,
+  LineElement,
+  Title,
+  ChartTooltip,
+  Legend,
+);
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
