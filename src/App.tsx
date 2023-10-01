@@ -6,7 +6,7 @@ import { ChartIndex } from './ChartIndex'
 import { SmoothKey, smoothOptions } from './utils/smoothing'
 import './App.css'
 
-const indicies: Index[] = ['kpi', 'kpif', 'kpifXEnergy']
+const indicies: Index[] = ['kpi', 'kpif', 'kpifXEnergy', 'SEDP1WSTIBORDELAYC', 'SECBREPOEFF']
 
 export function App() {
   const [index, setIndex] = useState<Index>('kpi')
@@ -25,15 +25,18 @@ export function App() {
 
   const datasets = indexQuery.data ? [smoothKernal(indexQuery.data)] : []
 
-  const inflation = [1, 12].map((distance) => datasets.map(set => ({
-      ...set,
-      label: set.label + ' ' + distance,
-      data: set.data.map((d, i, a) => ({
-        ...d,
-        y: (d.y - a[i-distance]?.y) / a[i-distance]?.y * 12 / distance
-      }))
+  const derivatives = [1, 12].map((distance) => datasets.map(set => ({
+    ...set,
+    yAxisID: 'y2',
+    label: set.label + ' ' + distance,
+    data: set.data.map((d, i, a) => ({
+      ...d,
+      y: (d.y - a[i-distance]?.y) / a[i-distance]?.y * 12 / distance
     }))
-  ).flat()
+  }))
+).flat()
+
+  const seriesTotal = datasets.concat(derivatives)
 
   return (
     <>
@@ -44,7 +47,7 @@ export function App() {
         {smoothOptions.map(o => <option key={o.key} value={o.key}>{o.name}</option>)}
       </HTMLSelect>
       <div style={{ width: '800', height: '800' }}>
-        <ChartIndex datasets={inflation} />
+        <ChartIndex datasets={seriesTotal} />
       </div>
     </>
   )
