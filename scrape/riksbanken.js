@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon'
 
 export function getRiksbankIndex(index) {
-  return fetch(`https://api-test.riksbank.se/swea/v1/Observations/${index}/2000-01-01`, {
+  return fetch(`https://api-test.riksbank.se/swea/v1/Observations/${index}/1970-01-01`, {
   method: 'GET',
     headers: { 'Cache-Control': 'no-cache' }
   })
