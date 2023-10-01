@@ -1,24 +1,43 @@
 import { promises as fs } from 'fs';
 import { getIndex } from './api.js'
-import { getRiksbankIndex } from './riksbanken.js'
+import { getRiksbankIndex, getSWESTR } from './riksbanken.js'
 
-[
-  'kpi',
-  'kpif',
-  'kpifXEnergy'
-].map(index => {
-  return getIndex(index)
+const scb = [
+  { key: 'kpi', name: 'KPI', index: true },
+  { key: 'kpif', name: 'KPI Fast ränta', index: true },
+  { key: 'kpifXEnergy', name: 'PKI Fast ränta exluderat energi', index: true },
+]
+
+const riksbank = [
+  { key: 'SECBREPOEFF', name: 'REPO', index: false },
+  { key: 'SEDP1WSTIBORDELAYC', name: 'STIBOR', index: false },
+]
+
+const swestr = [
+  { key: 'getSWESTR', name: 'Styrränta?', index: false},
+]
+
+const sources = scb.concat(riksbank).concat(swestr)
+
+fs.writeFile(`./src/assets/sources.json`, JSON.stringify(sources, null, 2))
+
+scb.map(source => {
+  return getIndex(source.key)
     .then(data => { 
-      fs.writeFile(`./public/${index}.json`, JSON.stringify(data, null, 2))
+      fs.writeFile(`./public/${source.key}.json`, JSON.stringify(data, null, 2))
     })
 });
 
-[
-  'SECBREPOEFF',
-  'SEDP1WSTIBORDELAYC',
-].map(index => {
-  getRiksbankIndex(index).then(repo => {
+riksbank.map(source => {
+  getRiksbankIndex(source.key).then(data => {
     // console.log('repo', repo)
-    fs.writeFile(`./public/${index}.json`, JSON.stringify(repo, null, 2))
+    fs.writeFile(`./public/${source.key}.json`, JSON.stringify(data, null, 2))
+  })
+});
+
+swestr.map(source => {
+  getSWESTR(source.key).then(data => {
+    // console.log('repo', repo)
+    fs.writeFile(`./public/${source.key}.json`, JSON.stringify(data, null, 2))
   })
 });

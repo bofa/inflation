@@ -4,18 +4,21 @@ import { HTMLSelect } from '@blueprintjs/core'
 import { Index, getIndex } from './api'
 import { ChartIndex } from './ChartIndex'
 import { SmoothKey, smoothOptions } from './utils/smoothing'
+import sources from './assets/sources.json'
 import './App.css'
 
-const indicies: Index[] = ['kpi', 'kpif', 'kpifXEnergy', 'SEDP1WSTIBORDELAYC', 'SECBREPOEFF']
+// const indicies: Index[] = sources[number]['key']  ['kpi', 'kpif', 'kpifXEnergy', 'SEDP1WSTIBORDELAYC', 'SECBREPOEFF']
 
 export function App() {
-  const [index, setIndex] = useState<Index>('kpi')
+  const [sourceKey, setSourceKey] = useState<Index>('kpi')
   const [smoothKey, setSmoothKey] = useState<SmoothKey>('gaussian3')
 
+  const source = sources.find(source => source.key === sourceKey)
+
   const indexQuery = useQuery({
-    queryKey: ['index', index],
-    queryFn: () => getIndex(index).then(data => ({
-      label: index,
+    queryKey: ['source', sourceKey],
+    queryFn: () => getIndex(sourceKey).then(data => ({
+      label: sourceKey,
       data,
     })),
     staleTime: Infinity
@@ -25,25 +28,34 @@ export function App() {
 
   const datasets = indexQuery.data ? [smoothKernal(indexQuery.data)] : []
 
-  const derivatives = [1, 12].map((distance) => datasets.map(set => ({
-    ...set,
-    yAxisID: 'y2',
-    label: set.label + ' ' + distance,
-    data: set.data.map((d, i, a) => ({
-      ...d,
-      y: (d.y - a[i-distance]?.y) / a[i-distance]?.y * 12 / distance
+  const derivatives = source?.index ? [
+    { step: 1, label: 'Month to Month' },
+    { step: 12, label: 'Year to Year' },
+  ].map((operator) => datasets.map(set => ({
+      ...set,
+      yAxisID: 'y',
+      label: operator.label,
+      data: set.data.map((d, i, a) => ({
+        ...d,
+        y: (d.y - a[i-operator.step]?.y) / a[i-operator.step]?.y * 12 / operator.step
+      }))
     }))
-  }))
-).flat()
+  ).flat()
+  : []
 
-  const seriesTotal = datasets.concat(derivatives)
+  const seriesTotal = datasets
+    .map(series => ({
+      ...series,
+      yAxisID: source?.index ? 'y2' : 'y'
+    }))
+    .concat(derivatives)
 
   return (
     <>
-      <HTMLSelect value={index} onChange={e => setIndex(e.currentTarget.value as Index)}>
-        {indicies.map(o => <option key={o} value={o}>{o}</option>)}
+      <HTMLSelect value={sourceKey} onChange={e => setSourceKey(e.currentTarget.value as Index)}>
+        {sources.map(source => <option key={source.key} value={source.key}>{source.name}</option>)}
       </HTMLSelect>
-      <HTMLSelect value={smoothKey} onChange={e => setSmoothKey(e.currentTarget.value as SmoothKey)}>
+      <HTMLSelect disabled={!source?.index} value={smoothKey} onChange={e => setSmoothKey(e.currentTarget.value as SmoothKey)}>
         {smoothOptions.map(o => <option key={o.key} value={o.key}>{o.name}</option>)}
       </HTMLSelect>
       <div style={{ width: '800', height: '800' }}>

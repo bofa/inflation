@@ -1,0 +1,32 @@
+[
+  {
+    "key": "kpi",
+    "name": "KPI",
+    "index": true
+  },
+  {
+    "key": "kpif",
+    "name": "KPI Fast ränta",
+    "index": true
+  },
+  {
+    "key": "kpifXEnergy",
+    "name": "PKI Fast ränta exluderat energi",
+    "index": true
+  },
+  {
+    "key": "SECBREPOEFF",
+    "name": "REPO",
+    "index": false
+  },
+  {
+    "key": "SEDP1WSTIBORDELAYC",
+    "name": "STIBOR",
+    "index": false
+  },
+  {
+    "key": "getSWESTR",
+    "name": "Styrränta?",
+    "index": false
+  }
+]

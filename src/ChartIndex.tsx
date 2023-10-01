@@ -1,4 +1,4 @@
-import { ChartData } from 'chart.js';
+import { ChartData, ChartOptions } from 'chart.js';
 import { type DateTime } from 'luxon'
 import { Line } from 'react-chartjs-2';
 
@@ -7,7 +7,7 @@ export type Series = {
   data: { x: DateTime, y: number }[] 
 }
 
-const options = {
+const options: ChartOptions<'line'> = {
   responsive: false,
   maintainAspectRatio: false,
   scales: {
@@ -26,7 +26,16 @@ const options = {
         display: true,
         text: 'Date'
       },
-    }
+    },
+    y: {
+      position: 'right',
+      ticks: {
+        callback: (value: any) => (100*value).toLocaleString() + '%'
+      }
+    },
+    y2: {
+      display: false,
+    },
   },
   plugins: {
     legend: {
@@ -37,7 +46,16 @@ const options = {
       text: 'Chart.js Bar Chart',
     },
     tooltip: {
-      
+      callbacks: {
+        label: (value) => {
+          // TODO diffrentiate between axis
+          if (value.parsed.y > 10) {
+            return value.parsed.y.toLocaleString(undefined, {maximumFractionDigits: 1 })
+          } 
+
+          return (100*value.parsed.y).toLocaleString(undefined, { maximumFractionDigits: 1 }) + '%'
+        }
+      }
     }
   },
   locale: 'sv-SE' as const
