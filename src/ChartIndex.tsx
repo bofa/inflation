@@ -29,6 +29,7 @@ const options: ChartOptions<'line'> = {
     },
     y: {
       position: 'right',
+      // stacked: true,
       ticks: {
         callback: (value: any) => (100*value).toLocaleString() + '%'
       }
@@ -48,12 +49,13 @@ const options: ChartOptions<'line'> = {
     tooltip: {
       callbacks: {
         label: (value) => {
+          const baseLabel = value.dataset.label + ': '
           // TODO diffrentiate between axis
           if (value.parsed.y > 10) {
-            return value.parsed.y.toLocaleString(undefined, {maximumFractionDigits: 1 })
+            return baseLabel + value.parsed.y.toLocaleString(undefined, {maximumFractionDigits: 1 })
           } 
 
-          return (100*value.parsed.y).toLocaleString(undefined, { maximumFractionDigits: 1 }) + '%'
+          return baseLabel + (100*value.parsed.y).toLocaleString(undefined, { maximumFractionDigits: 1 }) + '%'
         }
       }
     }
@@ -72,17 +74,17 @@ export function ChartIndex (props: {
 
   const data: ChartData<"line"> = {
     datasets: props.datasets.map((set, i) => ({
-      ...set,
       borderColor: colors[i],
+      ...set,
       pointRadius: 0,
       pointHoverRadius: 5,
       pointHitRadius: 15,
-    })),
+    })) as any[],
   }
 
   return (
     <>
-      <Line data={data} options={options} width={800} height={800} />
+      <Line data={data} options={options} width={1200} height={800} />
     </>
   )
 }
