@@ -1,8 +1,37 @@
-import { useState } from "react";
-import { MenuItem } from "@blueprintjs/core";
-import { MultiSelect } from "@blueprintjs/select";
+import { Checkbox, Divider, FormGroup, Menu, MenuItem } from "@blueprintjs/core"
+import { MultiSelect } from "@blueprintjs/select"
 import categoriesImport from './assets/categories.json'
-import { toggle } from "./utils/toggle";
+import kpi  from './assets/kpi.json'
+import kpif from './assets/kpif.json'
+import kpifXEnergy from './assets/kpifXEnergy.json'
+import { toggle } from "./utils/toggle"
+import { useState } from "react"
+
+export type Category = {
+  label: string
+  step?: number
+  data: {
+    x: string
+    y: number
+    weight?: number
+  }[]
+}
+
+const indexSeries: Category[] = [
+  {
+    label: 'KPI',
+    data: kpi
+  },{
+    label: 'KPIF',
+    data: kpif
+  },{
+    label: 'KPIF x Energy',
+    data: kpifXEnergy
+  }
+].map(s => ({
+  ...s,
+  data: s.data.map(d => ({ x: d.x, y: Number(d.y) }))
+}))
 
 const removeSeries = [
   // Due to null data
@@ -23,33 +52,96 @@ const removeSeries = [
   "H Räntor egnahem",
 ]
 
-export type Category = { label: string, data: { x: string, weight: number, index: number }[] }
-export const categoriesTyped = categoriesImport as Category[]
+export const categoriesTyped = categoriesImport as any[]
 
-export const categories = categoriesTyped.filter(series => !removeSeries.includes(series.label))
+export const categories = indexSeries
+.concat(categoriesTyped
+  .filter(series => !removeSeries.includes(series.label))
+  .map(s => ({
+    ...s,
+    data: s.data.map(d => ({ ...d, y: d.index }))
+  })) 
+)
+.flatMap(category => [
+  category,
+  ...[
+    { step: 1, label: ' Month to Month' },
+    { step: 12, label: ' Year to Year' }
+  ].map(operator => ({
+    label: category.label + operator.label,
+    step: operator.step,
+    data: category.data.map((d, i, a) => ({
+      ...d,
+      y: (d.y - a[i-operator.step]?.y) / a[i-operator.step]?.y * 12 / operator.step
+    }))
+  }))
+])
 
 export function SelectCategories (props: {
   selectedItems: Category[]
   setSelectedItems(items: Category[]): void 
 }) {
+  const [showIndex, setShowIndex] = useState(true)
+  const [showM2M, setShowM2M] = useState(true)
+  const [showY2Y, setShowY2Y] = useState(true)
+
   const selectedIds = props.selectedItems.map(item => item.label)
 
-  return <MultiSelect<Category>
-    resetOnSelect={false}
-    resetOnQuery={false}
-    itemPredicate={(query, item) => item.label.toLocaleLowerCase().includes(query.toLowerCase())}
-    items={categories}
-    itemRenderer={(item, { handleClick, modifiers }) => <MenuItem
-      {...modifiers}
-      icon={selectedIds.includes(item.label) ? 'small-tick' : null}
-      onClick={handleClick}
-      key={item.label}
-      text={item.label}
-      shouldDismissPopover={false}
-    />}
-    selectedItems={props.selectedItems}
-    onItemSelect={item => props.setSelectedItems(toggle(item, props.selectedItems))}
-    tagRenderer={item => item.label}
-    onRemove={item => props.setSelectedItems(toggle(item, props.selectedItems))}
-  />
+  return ( 
+    <FormGroup
+      label="Categories"
+      style={{ width: '100%' }}
+    >
+      <MultiSelect<Category>
+        fill={true}
+        resetOnSelect={false}
+        resetOnQuery={false}
+        itemPredicate={(query, item) =>
+          (showIndex || item.step !== undefined)
+          && (showM2M || item.step !== 1)
+          && (showY2Y || item.step !== 12)
+          && item.label.toLocaleLowerCase().includes(query.toLowerCase())}
+        items={categories}
+        itemListRenderer={({ filteredItems, itemsParentRef, query, renderItem }) =>
+          <Menu>
+            <Checkbox
+              checked={showIndex}
+              onChange={(e: any) => setShowIndex(e.target.checked)}
+            >
+              Index
+            </Checkbox>
+            <Checkbox
+              checked={showM2M}
+              onChange={(e: any) => setShowM2M(e.target.checked)}
+            >
+              Month to Month
+            </Checkbox>
+            <Checkbox
+              checked={showY2Y}
+              onChange={(e: any) => setShowY2Y(e.target.checked)}
+            >
+              Year to Year
+            </Checkbox>
+            <Divider/>
+            {filteredItems.map(renderItem)}
+          </Menu>
+        }
+        itemRenderer={(item, { handleClick, modifiers }) => <MenuItem
+          {...modifiers}
+          icon={selectedIds.includes(item.label) ? 'small-tick' : null}
+          onClick={handleClick}
+          key={item.label}
+          text={item.label}
+          shouldDismissPopover={false}
+        />}
+        selectedItems={props.selectedItems}
+        onItemSelect={item => props.setSelectedItems(toggle(item, props.selectedItems))}
+        tagRenderer={item => item.label}
+        onRemove={item => props.setSelectedItems(toggle(item, props.selectedItems))}
+        popoverProps={{
+          usePortal: false
+        }}
+      />
+    </FormGroup>
+  )
 }
