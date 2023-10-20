@@ -1,4 +1,4 @@
-import { max, min, std, sum } from 'mathjs'
+import { max, min, std } from 'mathjs'
 import { DateTime, Interval } from 'luxon'
 import { useState } from 'react'
 import { ChartIndex, Series, colors } from './ChartIndex'
@@ -100,7 +100,12 @@ export function App() {
         backgroundColor,
         data: set.data
           .filter(d => dateInterval.contains(d.x))
-          .map((d: any) => ({ x: d.x, y: d.y - stdSeries*(1 - d.weight) }))
+          .map((d: any) => ({
+            x: d.x,
+            y: Math.abs(d.weight-1) > 0.01
+              ? d.y - stdSeries*(1 - d.weight)
+              : null
+          }))
       },
       {
         label: set.label + ' plus hide',
@@ -110,7 +115,12 @@ export function App() {
         backgroundColor,
         data: set.data
           .filter(d => dateInterval.contains(d.x))
-          .map((d: any) => ({ x: d.x, y: d.y + stdSeries*(1 - d.weight) }))
+          .map((d: any) => ({
+            x: d.x,
+            y: Math.abs(d.weight-1) > 0.01
+              ? d.y + stdSeries*(1 - d.weight)
+              : null
+          }))
       }
     ]
   })
