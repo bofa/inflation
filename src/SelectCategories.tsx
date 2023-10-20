@@ -81,7 +81,7 @@ export function SelectCategories (props: {
   selectedItems: Category[]
   setSelectedItems(items: Category[]): void 
 }) {
-  const [showIndex, setShowIndex] = useState(true)
+  const [showIndex, setShowIndex] = useState(false)
   const [showM2M, setShowM2M] = useState(true)
   const [showY2Y, setShowY2Y] = useState(true)
 

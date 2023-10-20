@@ -6,7 +6,7 @@ const pdfNormal = (x, mean, std) => 1/(std*Math.sqrt(2*Math.PI))*Math.exp(-0.5*(
 export const gaussianSmoothingFactory = (std: number) => (series: Series) => {
   const kernelHalf = Array(20).fill(0).map((_, x) => pdfNormal(x, 0, std))
   const kernel = [...(kernelHalf.slice(1).reverse()), ...kernelHalf]
-  const kernelOffset = Math.floor(kernel.length/2)
+  const kernelOffset = Math.round(kernel.length/2)
 
   const transform = (data, indexData) =>
     sum(kernel.map((w, indexWeight) => w*(data[indexData + indexWeight - kernelOffset]?.y ?? 0)))
@@ -16,7 +16,9 @@ export const gaussianSmoothingFactory = (std: number) => (series: Series) => {
     ...series,
     data: series.data.map((d, i, a) => ({
       ...d,
-      y: transform(a, i)
+      y: transform(a, i),
+      raw: d.y,
+      weight: sum(kernel.map((w, indexWeight) => a[i + indexWeight + 1 - kernelOffset] ? w : 0))
     }))
   }
 }
@@ -26,7 +28,9 @@ export const movingAverageFactory = (window: number) => (series: Series) => ({
   ...series,
   data: series.data.map((d, i, a) => ({
     ...d,
-    y: mean(a.slice(Math.max(0, i - window), i + window + 1).map(d => d.y))
+    y: mean(a.slice(Math.max(0, i - window), i + window + 1).map(d => d.y)),
+    raw: d.y,
+    weight: 1 - Math.max(0, i + 1 + Math.ceil(window/2) - a.length)/(2*window + 1),
   }))
 })
 

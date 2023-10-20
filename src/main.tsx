@@ -11,6 +11,7 @@ import {
   Tooltip as ChartTooltip,
   Legend,
   TimeScale,
+  Filler,
 } from 'chart.js'
 import 'chartjs-adapter-luxon'
 import { App } from './App.tsx'
@@ -30,6 +31,7 @@ ChartJS.register(
   Title,
   ChartTooltip,
   Legend,
+  Filler,
 );
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
