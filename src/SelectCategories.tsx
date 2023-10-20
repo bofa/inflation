@@ -65,8 +65,8 @@ export const categories = indexSeries
 .flatMap(category => [
   category,
   ...[
-    { step: 1, label: ' Month to Month' },
-    { step: 12, label: ' Year to Year' }
+    { step: 1, label: ' M2M' },
+    { step: 12, label: ' Y2Y' }
   ].map(operator => ({
     label: category.label + operator.label,
     step: operator.step,
