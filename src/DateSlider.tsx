@@ -14,9 +14,12 @@ export function DateSlider(props: {
     min={0}
     max={max}
     value={value}
-    labelStepSize={4*12}
+    labelStepSize={2*12}
     labelRenderer={month => props.min.plus({ month }).toFormat('yyyy')}
-    onChange={value => setValue(value)}
-    onRelease={value => props.onRange(value.map(month => props.min.plus({ month })) as [DateTime, DateTime])}
+    onChange={value => {
+      setValue(value)
+      props.onRange(value.map(month => props.min.plus({ month })) as [DateTime, DateTime])
+    }}
+    // onRelease={value => props.onRange(value.map(month => props.min.plus({ month })) as [DateTime, DateTime])}
   />
 }
