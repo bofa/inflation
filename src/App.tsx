@@ -116,12 +116,10 @@ export function App() {
     ]
   })
 
-  console.log('confidence', confidence)
-
   const seriesTotal = derivatives.concat(confidence)
 
   return (
-    <>
+    <div style={{ width: '100vw', padding: 20 }}>
       <div style={{ display: 'flex', gap: 10, justifyContent: 'center' }}>
         {/* <HTMLSelect value={sourceKey} onChange={e => setSourceKey(e.currentTarget.value as Index)}>
           {sources.map(source => <option key={source.key} value={source.key}>{source.name}</option>)}
@@ -139,7 +137,7 @@ export function App() {
         />
 
       </div>
-      <div style={{ width: '100vw' }}>
+      <div>
         <ChartIndex datasets={seriesTotal} />
       </div>
       <DateSlider
@@ -147,7 +145,7 @@ export function App() {
         max={maxDate}
         onRange={setRange}
       />
-    </>
+    </div>
   )
 }
 

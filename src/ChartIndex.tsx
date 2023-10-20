@@ -28,6 +28,7 @@ const options: ChartOptions<'line'> = {
       },
     },
     y: {
+      suggestedMin: 0,
       position: 'right',
       // stacked: true,
       ticks: {
@@ -84,7 +85,12 @@ export function ChartIndex (props: {
 
   return (
     <>
-      <Line data={data} options={options} width={1200} height={800} />
+      <Line
+        data={data}
+        options={options}
+        width={window.innerWidth - 80}
+        height={window.innerHeight - 200}
+      />
     </>
   )
 }
