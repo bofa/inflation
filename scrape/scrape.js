@@ -26,7 +26,7 @@ scb.map(source => {
     .then(data => { 
       fs.writeFile(`./src/assets/${source.key}.json`, JSON.stringify(data, null, 2))
     })
-});
+})
 
 // riksbank.map(source => {
 //   getRiksbankIndex(source.key).then(data => {
@@ -47,3 +47,4 @@ getKPICategories()
   // console.log('repo', repo)
   fs.writeFile(`./src/assets/categories.json`, JSON.stringify(data, null, 2))
 })
+.then(() => console.log('Done getKPICategories'))

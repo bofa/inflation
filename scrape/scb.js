@@ -101,7 +101,7 @@ export function getKPICategories() {
         }
       })
 
-    console.log('categories', categories)
+    // console.log('categories', categories)
     // console.log('nextSet', nextSet.join(', '))
 
     return categories
