@@ -41,6 +41,9 @@ const options: ChartOptions<'line'> = {
   },
   plugins: {
     legend: {
+      labels: {
+        filter: (item) => !item.text.includes('hide'),
+      },
       position: 'top' as const,
     },
     title: {
@@ -84,13 +87,11 @@ export function ChartIndex (props: {
   }
 
   return (
-    <>
-      <Line
-        data={data}
-        options={options}
-        width={window.innerWidth - 80}
-        height={window.innerHeight - 200}
-      />
-    </>
+    <Line
+      data={data}
+      options={options}
+      width={window.innerWidth - 80}
+      height={window.innerHeight - 200}
+    />
   )
 }

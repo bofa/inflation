@@ -4,9 +4,9 @@ import { useState } from 'react'
 import { ChartIndex, Series, colors } from './ChartIndex'
 import { SmoothKey, smoothOptions } from './utils/smoothing'
 import { DateSlider } from './DateSlider'
-import './App.css'
 import { Category, SelectCategories, categories } from './SelectCategories'
 import { SelectSmooth } from './SelectSmooth'
+import './App.css'
 
 
 // const indicies: Index[] = sources[number]['key']  ['kpi', 'kpif', 'kpifXEnergy', 'SEDP1WSTIBORDELAYC', 'SECBREPOEFF']
@@ -43,7 +43,7 @@ import { SelectSmooth } from './SelectSmooth'
 //   "H Räntor egnahem",
 // ]
 
-const totalWeights = categories[0].data.map((_, i) => sum(categories.map(category => category.data[i]?.weight ?? 0)))
+// const totalWeights = categories[0].data.map((_, i) => sum(categories.map(category => category.data[i]?.weight ?? 0)))
 
 const massageData = categories
 .map(category => ({
@@ -56,9 +56,6 @@ const allDatesAsMillis = massageData
   .map(d => d.x.toMillis())
 const minDate = DateTime.fromMillis(min(allDatesAsMillis) - 100)
 const maxDate = DateTime.fromMillis(max(allDatesAsMillis) + 100)
-
-
-console.log('massageData', totalWeights, massageData.map(series => series.label))
 
 export function App() {
   const [selectedItems, setSelectedItems] = useState<Category[]>(categories.slice(2,3))
@@ -96,8 +93,9 @@ export function App() {
 
     return [
       {
-        label: set.label + ' minus',
+        label: set.label + ' minus hide',
         borderWidth: 0,
+        pointHitRadius: 0,
         fill: i,
         backgroundColor,
         data: set.data
@@ -105,8 +103,9 @@ export function App() {
           .map((d: any) => ({ x: d.x, y: d.y - stdSeries*(1 - d.weight) }))
       },
       {
-        label: set.label + ' plus',
+        label: set.label + ' plus hide',
         borderWidth: 0,
+        pointHitRadius: 0,
         fill: i,
         backgroundColor,
         data: set.data
