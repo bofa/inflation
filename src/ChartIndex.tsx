@@ -47,8 +47,8 @@ const options: ChartOptions<'line'> = {
       position: 'top' as const,
     },
     title: {
-      display: true,
-      text: 'Chart.js Bar Chart',
+      display: false,
+      text: 'Title?',
     },
     tooltip: {
       callbacks: {
