@@ -48,6 +48,7 @@ import './App.css'
 const massageData = categories
 .map(category => ({
   label: category.label,
+  shortname: category.shortname,
   data: category.data.map(d => ({ x: DateTime.fromISO(d.x), y: d.y }))
 }))
 
@@ -80,7 +81,7 @@ export function App() {
       ...set,
       borderColor: colors[i],
       yAxisID: 'y',
-      label: set.label,
+      label: set.shortname ?? set.label,
       data: set.data
       .filter(d => dateInterval.contains(d.x))
     }))

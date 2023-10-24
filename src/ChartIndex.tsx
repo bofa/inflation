@@ -3,7 +3,8 @@ import { type DateTime } from 'luxon'
 import { Line } from 'react-chartjs-2';
 
 export type Series = {
-  label: string,
+  label: string
+  shortname?: string
   data: { x: DateTime, y: number }[] 
 }
 

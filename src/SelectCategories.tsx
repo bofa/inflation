@@ -9,6 +9,7 @@ import { useState } from "react"
 
 export type Category = {
   label: string
+  shortname?: string
   step?: number
   data: {
     x: string
@@ -20,12 +21,15 @@ export type Category = {
 const indexSeries: Category[] = [
   {
     label: 'KPI',
+    shortname: 'KPI',
     data: kpi
   },{
     label: 'KPIF',
+    shortname: 'KPIF',
     data: kpif
   },{
     label: 'KPIF x Energy',
+    shortname: 'KPIFxE',
     data: kpifXEnergy
   }
 ].map(s => ({
@@ -69,6 +73,7 @@ export const categories = indexSeries
     { step: 12, label: ' Y2Y' }
   ].map(operator => ({
     label: category.label + operator.label,
+    shortname: (category.shortname ?? category.label) + operator.label,
     step: operator.step,
     data: category.data.map((d, i, a) => ({
       ...d,
@@ -102,7 +107,7 @@ export function SelectCategories (props: {
           && (showY2Y || item.step !== 12)
           && item.label.toLocaleLowerCase().includes(query.toLowerCase())}
         items={categories}
-        itemListRenderer={({ filteredItems, itemsParentRef, query, renderItem }) =>
+        itemListRenderer={({ filteredItems, renderItem }) =>
           <Menu>
             <Checkbox
               checked={showIndex}
