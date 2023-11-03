@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { DateTime } from 'luxon'
-import debug from './debug.json' assert { type: "json" }
+// import debug from './debug.json' assert { type: "json" }
 
 const indicies = {
   kpi: ['https://api.scb.se/OV0104/v1/doris/sv/ssd/START/PR/PR0101/PR0101A/KPItotM', "000004VU"],
@@ -65,7 +65,7 @@ export function getKPICategories() {
   //   return response
   // })
   .then(response => response.data)
-  .then(response => debug)
+  // .then(response => debug)
   .then((data) => {
     const indexCategory = data.dimension.VaruTjansteRB.category.index
     const labelCategory = data.dimension.VaruTjansteRB.category.label
