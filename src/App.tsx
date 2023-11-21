@@ -92,6 +92,7 @@ export function App() {
 
     const backgroundColor = addAlpha(colors[i], 0.2)
 
+    const eps = 0.005
     return [
       {
         label: set.label + ' minus hide',
@@ -103,7 +104,7 @@ export function App() {
           .filter(d => dateInterval.contains(d.x))
           .map((d: any) => ({
             x: d.x,
-            y: Math.abs(d.weight-1) > 0.01
+            y: Math.abs(d.weight-1) > eps
               ? d.y - stdSeries*(1 - d.weight)
               : null
           }))
@@ -118,7 +119,7 @@ export function App() {
           .filter(d => dateInterval.contains(d.x))
           .map((d: any) => ({
             x: d.x,
-            y: Math.abs(d.weight-1) > 0.01
+            y: Math.abs(d.weight-1) > eps
               ? d.y + stdSeries*(1 - d.weight)
               : null
           }))
