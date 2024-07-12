@@ -61,7 +61,7 @@ const maxDate = DateTime.fromMillis(max(allDatesAsMillis) + 100)
 export function App() {
   const [selectedItems, setSelectedItems] = useState<Category[]>(categories.slice(2,3))
   const [range, setRange] = useState([minDate, maxDate])
-  const [smoothKey, setSmoothKey] = useState<SmoothKey>('gaussian3')
+  const [smoothKey, setSmoothKey] = useState<SmoothKey>('none')
 
   const smooth = smoothOptions.find(smooth => smooth.key === smoothKey)!
   const smoothKernal = smooth.kernal
