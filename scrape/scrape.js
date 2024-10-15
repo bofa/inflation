@@ -26,6 +26,7 @@ scb.map(source => {
     .then(data => { 
       fs.writeFile(`./src/assets/${source.key}.json`, JSON.stringify(data, null, 2))
     })
+    .then(() => console.log('Done ' + source.name))
 })
 
 // riksbank.map(source => {
