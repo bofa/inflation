@@ -1,5 +1,6 @@
 import { mean, sum } from "mathjs"
 import { Series } from "../ChartIndex"
+import { cosineTransform, inverseCosineTransform } from "./cosine-transform"
 
 const pdfNormal = (x, mean, std) => 1/(std*Math.sqrt(2*Math.PI))*Math.exp(-0.5*((x-mean)/std)**2)
 
@@ -23,7 +24,6 @@ export const gaussianSmoothingFactory = (std: number) => (series: Series) => {
   }
 }
 
-
 export const movingAverageFactory = (window: number) => (series: Series) => ({
   ...series,
   data: series.data.map((d, i, a) => ({
@@ -33,6 +33,28 @@ export const movingAverageFactory = (window: number) => (series: Series) => ({
     weight: 1 - Math.max(0, i + 1 + Math.ceil(window/2) - a.length)/(2*window + 1),
   }))
 })
+
+export const cosineFactory = (window: number) => (series: Series) => {
+  const data = series.data.map(p => p.y).map(y => isNaN(y) ? 0 : y)
+  const L = nearestPowerOf2(data.length)
+  const signal = data.concat(Array(2*L - data.length).fill(0))
+  const Y = new Float64Array(signal)
+  const YTransform = Y.slice()
+
+  cosineTransform(YTransform)
+  const YHat = YTransform.map((v, i) => i > window ? 0 : v) // .slice(0, L/8)
+  inverseCosineTransform(YHat)
+
+  return {
+    ...series,
+    data: series.data.map((d, i) => ({
+      ...d,
+      y: YHat[i],
+      raw: d.y,
+      weight: 1,
+    }))
+  }
+}
 
 
 export type SmoothKey = typeof smoothOptions[number]['key']
@@ -76,5 +98,19 @@ export const smoothOptions = [
     name: 'Gaussian 4',
     key: 'gaussian4',
     kernal: gaussianSmoothingFactory(4)
+  },
+  {
+    name: 'Cosine 20',
+    key: 'cosine20',
+    kernal: cosineFactory(20)
+  },
+  {
+    name: 'Cosine 30',
+    key: 'cosine30',
+    kernal: cosineFactory(30)
   }
 ] as const satisfies readonly { name: string, key: string, kernal: (series: Series) => Series}[]
+
+function nearestPowerOf2(n: number) {
+  return 1 << 31 - Math.clz32(n);
+}
