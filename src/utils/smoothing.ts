@@ -56,7 +56,6 @@ export const cosineFactory = (window: number) => (series: Series) => {
   }
 }
 
-
 export type SmoothKey = typeof smoothOptions[number]['key']
 export const smoothOptions = [
   {
