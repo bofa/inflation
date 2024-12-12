@@ -7,7 +7,7 @@ export function getRiksbankIndex(index) {
   })
   .then(response => response.json())
   .then(data => data.map(obj => ({
-    x: DateTime.fromFormat(obj.date, 'yyyy-MM-dd'),
+    x: DateTime.fromFormat(obj.date, 'yyyy-MM-dd', { zone: 'utc' }),
     y: obj.value / 100,
   })))
 }

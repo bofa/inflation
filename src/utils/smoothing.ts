@@ -107,6 +107,21 @@ export const smoothOptions = [
     name: 'Cosine 30',
     key: 'cosine30',
     kernal: cosineFactory(30)
+  },
+  {
+    name: 'Cosine 50',
+    key: 'cosine50',
+    kernal: cosineFactory(50)
+  },
+  {
+    name: 'Cosine 75',
+    key: 'cosine75',
+    kernal: cosineFactory(75)
+  },
+  {
+    name: 'Cosine 100',
+    key: 'cosine100',
+    kernal: cosineFactory(100)
   }
 ] as const satisfies readonly { name: string, key: string, kernal: (series: Series) => Series}[]
 

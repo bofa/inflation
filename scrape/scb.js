@@ -33,7 +33,7 @@ export function getIndex(index) {
   //   return response
   // })
   .then(response => response.data.data.map(d => ({
-    x: DateTime.fromFormat(d['key'][0], "yyyy'M'MM"),  
+    x: DateTime.fromFormat(d['key'][0], "yyyy'M'MM", { zone: 'utc' }),
     y: d['values'][0]
   })))
 }
