@@ -89,7 +89,7 @@ export function getKPICategories() {
         // const nextSet = values.slice(stepLengthTime, 2*stepLengthTime)
         
         const series = dates.map((x, i) => ({
-          x: DateTime.fromFormat(x, "yyyy'M'MM"),
+          x: DateTime.fromFormat(x, "yyyy'M'MM", { zone: 'utc' }),
           weight: financialWeights[i],
           index: financialIndex[i],
         }))
