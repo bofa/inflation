@@ -1,10 +1,11 @@
 import axios from 'axios'
 import { DateTime } from 'luxon'
 
+// TODO Import json data
 const history = [
-  416.75,
-  263.81,
-  248.23,
+  416.71,
+  264.48,
+  249.09,
 ]
 
 function getSnabbInflation() {
