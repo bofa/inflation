@@ -56,6 +56,31 @@ export const cosineFactory = (window: number) => (series: Series) => {
   }
 }
 
+export const seasonalFactory = () => (series: Series) => {
+  const completeMean = mean(series.data
+    .filter(p => p.x.year > 2000)
+    .map(p => p.y)
+    .filter(y => !isNaN(y))
+  )
+
+  const monthlyError = Array(12).fill(0).map((_, i) => i + 1)
+    .map(month => {
+      const monthlyValues = series.data
+        .filter(p => p.x.year > 2000)
+        .filter(p => p.x.month === month)
+        .map(p => p.y)
+        .filter(y => !isNaN(y))
+        // .filter(y => abs(y) < 0.2)
+
+      return monthlyValues.length > 0 ? mean(monthlyValues) : 0
+  })
+
+  return {
+    ...series,
+    data: series.data.map(({ x, y }) => ({ x, y: y - monthlyError[x.month-1] + completeMean }))
+  }
+}
+
 export type SmoothKey = typeof smoothOptions[number]['key']
 export const smoothOptions = [
   {
@@ -63,6 +88,11 @@ export const smoothOptions = [
     key: 'none',
     kernal: (series: Series) => series
   },
+  // {
+  //   name: 'Seasonal',
+  //   key: 'seasonal',
+  //   kernal: series => gaussianSmoothingFactory(3)(seasonalFactory()(series)),
+  // },
   {
     name: 'Moving Average 3',
     key: 'movingAverage3',
