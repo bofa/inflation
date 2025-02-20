@@ -1,12 +1,18 @@
 import axios from 'axios'
 import { DateTime } from 'luxon'
+import kpi from '../src/assets/kpi.json' assert { type: "json" }
+import kpif from '../src/assets/kpif.json' assert { type: "json" }
+import kpifx from '../src/assets/kpifXEnergy.json' assert { type: "json" }
 
-// TODO Import json data
+const activeDate = DateTime.now().minus({ month: 1 }).setZone('utc')
+
 const history = [
-  416.71,
-  264.48,
-  249.09,
-]
+  kpi,
+  kpif,
+  kpifx,
+].map(index => Number(index.at(-1).y))
+
+console.table(history)
 
 function getSnabbInflation() {
   axios.post('https://api.scb.se/OV0104/v1/doris/sv/ssd/START/PR/PR0101/PR0101SK/SnabbKPI', {
@@ -25,7 +31,7 @@ function getSnabbInflation() {
         "selection": {
           "filter": "item",
           "values": [
-            DateTime.now().minus({ month: 1 }).toFormat("yyyy'M'MM")
+            activeDate.toFormat("yyyy'M'MM")
           ]
         }
       }
