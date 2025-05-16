@@ -1,11 +1,12 @@
+import { useState } from "react"
 import { Checkbox, Divider, FormGroup, Menu, MenuItem } from "@blueprintjs/core"
 import { MultiSelect } from "@blueprintjs/select"
+import { toggle } from "./utils/toggle"
 import categoriesImport from './assets/categories.json'
 import kpi  from './assets/kpi.json'
 import kpif from './assets/kpif.json'
 import kpifXEnergy from './assets/kpifXEnergy.json'
-import { toggle } from "./utils/toggle"
-import { useState } from "react"
+// import russia from './assets/russia.json'
 
 export type Category = {
   label: string
@@ -23,15 +24,22 @@ const indexSeries: Category[] = [
     label: 'KPI',
     shortname: 'KPI',
     data: kpi
-  },{
+  },
+  {
     label: 'KPIF',
     shortname: 'KPIF',
     data: kpif
-  },{
+  },
+  {
     label: 'KPIF x Energy',
     shortname: 'KPIFxE',
     data: kpifXEnergy
-  }
+  },
+  // {
+  //   label: 'CPI Russia',
+  //   shortname: 'CPIRUS',
+  //   data: russia
+  // }
 ].map(s => ({
   ...s,
   data: s.data.map(d => ({ x: d.x, y: Number(d.y) }))
