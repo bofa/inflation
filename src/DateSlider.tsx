@@ -7,7 +7,7 @@ export function DateSlider(props: {
   max: DateTime
   onRange(value: [DateTime, DateTime]): void
 }) {
-  const max = props.max.diff(props.min, 'months').months
+  const max = Math.ceil(props.max.diff(props.min, 'months').months)
   const [value, setValue] = useState<NumberRange>([0, max])
 
   return <RangeSlider
