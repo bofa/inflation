@@ -1,8 +1,8 @@
 import axios from 'axios'
 import { DateTime } from 'luxon'
-import kpi from '../src/assets/kpi.json' assert { type: "json" }
-import kpif from '../src/assets/kpif.json' assert { type: "json" }
-import kpifx from '../src/assets/kpifXEnergy.json' assert { type: "json" }
+import kpi from '../src/assets/kpi.json' with { type: "json" }
+import kpif from '../src/assets/kpif.json' with { type: "json" }
+import kpifx from '../src/assets/kpifXEnergy.json' with { type: "json" }
 
 const activeDate = DateTime.now().minus({ month: 1 }).setZone('utc')
 
@@ -48,7 +48,11 @@ function getSnabbInflation() {
       const valueOld = history[i]
 
       const newIndex = valueOld * (value/100 + 1)
+
+      const output = { x: activeDate.startOf('month'), y: '' + newIndex }
+
       console.log(name, value, newIndex)
+      console.log(', ' + JSON.stringify(output))
 
       return newIndex
     })
