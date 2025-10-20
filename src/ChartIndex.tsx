@@ -55,12 +55,13 @@ const options: ChartOptions<'line'> = {
       callbacks: {
         label: (value) => {
           const baseLabel = value.dataset.label + ': '
+          const y = value.parsed.y ?? 0
           // TODO diffrentiate between axis
-          if (value.parsed.y > 10) {
-            return baseLabel + value.parsed.y.toLocaleString(undefined, {maximumFractionDigits: 1 })
+          if (y > 10) {
+            return baseLabel + y.toLocaleString(undefined, {maximumFractionDigits: 1 })
           } 
 
-          return baseLabel + (100*value.parsed.y).toLocaleString(undefined, { maximumFractionDigits: 1 }) + '%'
+          return baseLabel + (100*y).toLocaleString(undefined, { maximumFractionDigits: 1 }) + '%'
         }
       }
     }
