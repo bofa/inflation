@@ -3,9 +3,9 @@ import { DateTime } from 'luxon'
 // import debug from './debug.json' assert { type: "json" }
 
 const indicies = {
-  kpi: ['https://api.scb.se/OV0104/v1/doris/sv/ssd/START/PR/PR0101/PR0101A/KPItotM', "000004VU"],
-  kpif: ['https://api.scb.se/OV0104/v1/doris/sv/ssd/START/PR/PR0101/PR0101G/KPIF', "000005HR"],
-  kpifXEnergy: ['https://api.scb.se/OV0104/v1/doris/sv/ssd/START/PR/PR0101/PR0101J/KPIFexEN', "000005HP"]
+  kpi: ['https://api.scb.se/OV0104/v1/doris/sv/ssd/START/PR/PR0101/PR0101A/KPI2020M', "00000807"],
+  kpif: ['https://api.scb.se/OV0104/v1/doris/sv/ssd/START/PR/PR0101/PR0101G/KPIF2020', "000007ZN"],
+  kpifXEnergy: ['https://api.scb.se/OV0104/v1/doris/sv/ssd/START/PR/PR0101/PR0101J/KPIFXE2020', "000007ZW"]
 }
 
 export function getIndex(index) {
@@ -38,10 +38,14 @@ export function getIndex(index) {
   })))
 }
 
+// TODO Split calls over diffrent categories
+// https://www.statistikdatabasen.scb.se/pxweb/sv/ssd/START__PR__PR0101__PR0101DE/KPI2020COICOPMA/
+// const cetegories = ['00']
 
 export function getKPICategories() {
   return axios.post(
-    'https://api.scb.se/OV0104/v1/doris/sv/ssd/START/PR/PR0101/PR0101Z/KPIRBBas1980',
+ // 'https://api.scb.se/OV0104/v1/doris/sv/ssd/START/PR/PR0101/PR0101Z/KPIRBBas1980',
+    'https://api.scb.se/OV0104/v1/doris/sv/ssd/START/PR/PR0101/PR0101DE/KPI2020COICOPMA',
     {
       "query": [
         {
@@ -49,8 +53,23 @@ export function getKPICategories() {
           "selection": {
             "filter": "item",
             "values": [
-              "PR0101AA",
-              "PR0101AC"
+              "000007WR"
+            ]
+          }
+        },
+        {
+          "code": "Tid",
+          "selection": {
+            "filter": "item",
+            "values": [
+              // "2025M10",
+              // "2025M11",
+              // "2025M12",
+              "1980M01",
+              "1980M02",
+              "1980M03",
+              "1980M04"
+
             ]
           }
         }
@@ -67,8 +86,8 @@ export function getKPICategories() {
   .then(response => response.data)
   // .then(response => debug)
   .then((data) => {
-    const indexCategory = data.dimension.VaruTjansteRB.category.index
-    const labelCategory = data.dimension.VaruTjansteRB.category.label
+    const indexCategory = data.dimension.VaruTjanstegrupp.category.index
+    const labelCategory = data.dimension.VaruTjanstegrupp.category.label
 
     const indexTime = data.dimension.Tid.category.index
     const labelTime = data.dimension.Tid.category.label

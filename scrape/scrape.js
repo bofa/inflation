@@ -43,9 +43,10 @@ scb.map(source => {
 //   })
 // });
 
-getKPICategories()
-.then(data => {
-  // console.log('repo', repo)
-  fs.writeFile(`./src/assets/categories.json`, JSON.stringify(data, null, 2))
-})
-.then(() => console.log('Done getKPICategories'))
+// TODO Issue with api changes
+// getKPICategories()
+// .then(data => {
+//   // console.log('repo', repo)
+//   fs.writeFile(`./src/assets/categories.json`, JSON.stringify(data, null, 2))
+// })
+// .then(() => console.log('Done getKPICategories'))
