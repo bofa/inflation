@@ -55,8 +55,8 @@ const massageData = categories
 const allDatesAsMillis = massageData
   .flatMap(series => series.data)
   .map(d => d.x.toMillis())
-const minDate = DateTime.fromMillis(min(allDatesAsMillis) - 100)
-const maxDate = DateTime.fromMillis(max(allDatesAsMillis) + 100)
+const minDate: DateTime<boolean> = DateTime.fromMillis(min(allDatesAsMillis)).minus({ days: 1 })
+const maxDate: DateTime<boolean> = DateTime.fromMillis(max(allDatesAsMillis)).plus({ days: 1 })
 
 export function App() {
   const [selectedItems, setSelectedItems] = useState<Category[]>(categories.slice(2,3))
